@@ -501,4 +501,14 @@ player.compete(level: 5)
 print("Highest unlocked level is now \(LevelTracker.highestUnlockedLevel)")
 print("\(player.tracker.currentLevel)")
 
+struct TimesTable {
+    
+    let multiplier: Int
+    
+    subscript (index: Int) -> Int {
+        return index * multiplier
+    }
+}
 
+let threeTimesTable = TimesTable(multiplier: 5)
+print("5 time fhree is \(threeTimesTable[8])")
