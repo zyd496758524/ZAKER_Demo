@@ -512,3 +512,45 @@ struct TimesTable {
 
 let threeTimesTable = TimesTable(multiplier: 5)
 print("5 time fhree is \(threeTimesTable[8])")
+
+
+struct Matrix {
+    let rows: Int,columns: Int
+    var grid:[Double]
+    // 构造方法
+    init(rows: Int,columns: Int) {
+        self.rows = rows
+        self.columns = columns
+        grid = Array(repeating: 0.0, count: rows * columns)
+    }
+    
+    func indexIsValid(row: Int,column: Int) -> Bool{
+        return rows >= 0 && column >= 0 && row < rows && column < columns
+    }
+    
+    subscript (row: Int, column: Int) -> Double {
+        
+        get {
+            assert(indexIsValid(row: row, column: column),"Index out of range")
+            return grid[(row * columns) + column]
+        }
+        
+        set {
+            assert(indexIsValid(row: row, column: column), "Index out of range")
+            grid[(row * columns) + column] = newValue
+        }
+    }
+}
+
+
+enum JZPlanet: Int {
+    
+    case mercury = 1, venus, earth, mars, jupiter, saturn, uranus,neptune
+    
+    subscript(n: Int) -> JZPlanet {
+        
+        return JZPlanet(rawValue: n)!
+    }
+}
+
+
