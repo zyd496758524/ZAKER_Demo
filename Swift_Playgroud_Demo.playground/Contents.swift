@@ -211,7 +211,7 @@ struct Point {
 }
 
 struct Size {
-    var width = 0.0,height = 0.0
+    var width = 0.0, height = 0.0
 }
 
 struct Rect {
@@ -553,4 +553,488 @@ enum JZPlanet: Int {
     }
 }
 
+class Vehicle {
+    
+    var currentSpeed = 0.0
+    var description: String {
+        return "traveling at \(currentSpeed) miles per hour"
+    }
+    
+    func makeNoise() -> Void {
+        print("Verhice make noise")
+    }
+}
 
+let vehicle = Vehicle()
+
+print(vehicle.makeNoise())
+print(vehicle.description)
+
+class Bicycle: Vehicle {
+    var hasBasket = false
+}
+
+let bicycle = Bicycle()
+bicycle.hasBasket = true
+bicycle.currentSpeed = 1.5
+
+print(bicycle.description)
+
+class Tandem: Bicycle {
+    var currentNumberOfPassengers = 0
+}
+
+let tandem = Tandem()
+tandem.hasBasket = true
+tandem.currentSpeed = 22.0
+tandem.currentNumberOfPassengers = 2
+print(tandem.description)
+
+class Train: Vehicle {
+    
+    override func makeNoise() {
+        super.makeNoise()
+        print("Choo Choo")
+    }
+}
+
+let train = Train()
+train.makeNoise()
+
+class Car: Vehicle {
+    final var gear = 1
+    override var description: String {
+        return super.description + "in gear \(gear)"
+    }
+}
+
+let car = Car()
+car.currentSpeed = 30
+print(car.description)
+
+class AutomaticCar: Car {
+    
+    override var currentSpeed: Double {
+        didSet{
+            gear = Int(currentSpeed / 10.0) + 1
+        }
+    }
+}
+
+let automatic = AutomaticCar()
+automatic.currentSpeed = 35.0
+
+print("AutomaticCar: \(automatic.description)")
+
+struct Fahreheit {
+    var temperature: Double = 32.0
+//    init() {
+//        temperature = 32.0
+//    }
+}
+
+var f = Fahreheit()
+print("The temperature is \(f.temperature)° Fahreheit")
+
+
+struct Celsius {
+    
+    var temperatureInCelsius: Double
+    
+    init(fromFahranheit fahrenheit: Double) {
+        temperatureInCelsius = (fahrenheit - 32.0) / 1.8
+    }
+    
+    init(fromKelvin kelvin: Double) {
+        temperatureInCelsius = kelvin - 273.15
+    }
+    
+    init(_ celsius: Double) {
+        temperatureInCelsius = celsius
+    }
+    
+}
+
+let boilingPointOfWater = Celsius(fromFahranheit: 212.0)
+
+print(boilingPointOfWater.temperatureInCelsius)
+
+let freezingPointOfWater = Celsius(fromKelvin: 273.15)
+
+print(freezingPointOfWater.temperatureInCelsius)
+
+let bodyTemperature = Celsius(37.0)
+print(bodyTemperature.temperatureInCelsius)
+
+struct Color {
+    
+    let red, green, blue: Double
+    
+    init(red: Double, green: Double, blue: Double) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+    }
+    init(white: Double) {
+        red = white
+        green = white
+        blue = white
+    }
+}
+
+let magenta = Color(red: 1.0, green: 0.0, blue: 1.0)
+let halfGray = Color(white: 0.5)
+
+class SurveyQuestion {
+    
+    var text: String
+    var response: String?
+    
+    init(text: String) {
+        self.text = text
+    }
+    
+    init() {
+        text = "ma ma"
+    }
+    
+    func ask() {
+        print(text)
+    }
+}
+
+let oneQuestion = SurveyQuestion(text: "what can i do for you")
+oneQuestion.ask()
+
+let secondQuestion = SurveyQuestion()
+secondQuestion.ask()
+
+print(secondQuestion.response ?? "no")
+
+// 默认构造器
+
+//class ShoppingListItem {
+//    var name: String?
+//    var quantity = 1
+//    var purchased: Bool = false
+//}
+//var item = ShoppingListItem()
+//print(item.quantity)
+
+// 结构体 逐一成员构造器
+
+struct JSSize {
+    var width = 0.0, height = 4.0
+}
+// 将自定义构造器 写到 扩展中，这样默认构造器、逐一成员构造器都能用来创建实例
+extension JSSize{
+    init(size: Size) {
+        width = size.width
+        height = size.height
+    }
+}
+
+let oneByone = JSSize()
+print(oneByone.width)
+
+let twoByTwo = JSSize(width: 4.0, height: 4.0)
+print(twoByTwo.width)
+
+let fiveByFive = JSSize(size: Size(width: 5.0, height: 5.0))
+
+
+struct JSRect {
+    var origin = Point()
+    var size = JSSize()
+    init() {}
+    
+    init(origin: Point,size: JSSize) {
+        self.origin = origin
+        self.size = size
+    }
+    
+    init(center: Point, size: JSSize) {
+        let originX = center.x - (size.width / 2)
+        let origixY = center.y - (size.height / 2)
+        self.init(origin: Point(x: originX, y: origixY), size: size)
+    }
+}
+
+let basicRect = JSRect()
+print(basicRect.origin,basicRect.size)
+
+let originRect = JSRect(origin: Point(x: 2.0, y: 2.0),
+                         size: JSSize(width: 2.0, height: 2.0))
+
+
+print(originRect.origin,originRect.size)
+
+class Food {
+    
+    var name: String = ""
+    var description: String {
+        return "my name is \(name)"
+    }
+
+    init(name: String) {
+        self.name = name
+    }
+    // 便利构造器
+    convenience init(){
+        self.init(name: "Unnamed")
+    }
+}
+
+let nameMeat = Food(name: "Bacon")
+print(nameMeat.name)
+
+let mysterMeat = Food()
+print(mysterMeat.name)
+
+
+class RectipeIngredient: Food {
+    
+    var quantity: Int
+    
+    init(name: String, quantity: Int) {
+        self.quantity = quantity
+        super.init(name: name)
+    }
+    
+    override convenience init(name: String) {
+        self.init(name: name, quantity: 1)
+    }
+}
+
+let oneItem = RectipeIngredient()
+let twoItem = RectipeIngredient(name: "Bacon")
+let thrItem = RectipeIngredient(name: "Eggs", quantity: 3)
+
+class ShoppingListItem: RectipeIngredient {
+    
+    var purchased = false
+    override var description: String{
+        
+        var output = "\(quantity) x \(name)"
+        output += purchased ? "  √" : "  ×"
+        return output
+    }
+}
+
+
+var breakfastList = [
+    ShoppingListItem(),
+    ShoppingListItem(name: "Bacon"),
+    ShoppingListItem(name: "Eggs", quantity: 5)
+]
+
+breakfastList[0].name = "Orange Juice"
+breakfastList[0].purchased = true
+for item in breakfastList {
+    print(item.description)
+}
+
+let wholeNumber: Double = 12345.0
+
+let pi = 3.14159
+
+if let valueMaintained = Int(exactly: wholeNumber) {
+    print(valueMaintained)
+}
+
+let valueChange = Int(exactly: pi)
+
+if valueChange == nil {
+    print("\(pi) conversion to Int does maintain value")
+}
+
+struct Animal {
+    
+    let species: String
+    init?(species: String) {
+        if species.isEmpty {
+            return nil
+        }
+        self.species = species
+    }
+}
+
+let someCreature = Animal(species: "Giraffe")
+
+if let giraffe = someCreature {
+    print(giraffe)
+}
+
+let anonymousCreature = Animal(species: "")
+
+if anonymousCreature == nil {
+ print("the anonymous creature could not be initialized")
+}
+
+/*
+enum TemperatureUnit {
+    
+    case Kelvin, Celsius, Fahreheit
+    
+    init?(symbol: Character) {
+        
+        switch symbol {
+            case "K":
+                self = .Kelvin
+            case "C":
+                self = .Celsius
+            case "F":
+                self = .Fahreheit
+            default:
+                return nil
+        }
+    }
+}
+
+let fahrenheitUnit = TemperatureUnit(symbol: "F")
+
+if fahrenheitUnit != nil {
+    print("this is a defined temperature unit,so initialization succeeded")
+}
+
+let unknownUnit = TemperatureUnit(symbol: "X")
+
+if unknownUnit == nil {
+    print("this is not a defined temperature unit,so initialization failed")
+}
+ */
+
+enum TemperatureUnit: Character {
+    
+    case Kelvin = "K", Celsius = "C", Fahrenheit = "F"
+}
+
+let fahrenheit = TemperatureUnit(rawValue: "F")
+
+if let vale = fahrenheit {
+    
+    print("This is a defined temperature unit, son initialzation succeeded \(vale)")
+}
+
+let unknownUnit = TemperatureUnit(rawValue: "C")
+
+if let unit = unknownUnit {
+    print(unit)
+}else{
+    print("initialzation failed")
+}
+
+class Product {
+    let name: String
+    
+    init?(name: String) {
+        if name.isEmpty {
+            return nil
+        }
+        self.name = name
+    }
+}
+
+class CarItem: Product {
+    
+    let quantity: Int
+    init?(name: String, quantity: Int) {
+        if quantity < 1 {
+            return nil
+        }
+        self.quantity = quantity
+        super.init(name: name)
+    }
+}
+
+if let twoSocks = CarItem(name: "sock", quantity: 2) {
+    
+    print("Item:\(twoSocks.name),quantity: \(twoSocks.quantity)")
+}
+
+
+class Document {
+    
+    var name: String?
+    
+    init() {}
+    
+    init?(name: String) {
+        
+        if name.isEmpty {
+            return nil
+        }
+        self.name = name
+    }
+}
+
+class AutomaticllyNameDocument: Document {
+    
+    override init() {
+        super.init()
+        self.name = "Untitled"
+    }
+    
+    override init(name: String){
+        super.init()
+        if name.isEmpty {
+            self.name = "Untitled"
+        }else{
+            self.name = name
+        }
+    }
+}
+
+//class UntitledDocument: Document {
+//
+//    override init() {
+//        super.init(name: "Untitled")
+//    }
+//}
+
+class JSomeClass {
+    
+    required init(){
+        
+    }
+}
+
+class JSomeSubclass: JSomeClass {
+    
+    required init() {
+        
+    }
+}
+
+struct Chessboard {
+    
+    let boardColors: [Bool] = {
+        
+        var tempBoard = [Bool]()
+        var isBack = false
+        
+        for i in 1...8 {
+            
+            for j in 1...8 {
+                
+                tempBoard.append(isBack)
+                isBack = !isBack
+            }
+            isBack = !isBack
+        }
+        
+        return tempBoard
+    }()
+    
+    func squareIsBlackAt(row: Int, column: Int) -> Bool {
+        
+        return boardColors[(row * 8) + column]
+    }
+}
+
+
+let board = Chessboard()
+
+print(board.squareIsBlackAt(row: 1, column: 6))
+
+print(board.squareIsBlackAt(row: 4, column: 5))
