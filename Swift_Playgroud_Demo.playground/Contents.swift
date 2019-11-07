@@ -22,6 +22,7 @@ let strings = number.map { (numbers) -> String in
     var output = ""
     
     repeat{
+        
         output = digitName[number0 % 10]! + output
         number0 /= 10
         
@@ -1002,6 +1003,10 @@ class JSomeClass {
 class JSomeSubclass: JSomeClass {
     
     required init() {
+        
+    }
+    
+    deinit {
         
     }
 }
